@@ -57,5 +57,9 @@ public class Feed {
     public String toString() {
     return title + "\n" + link + "\n" + description + "\n" + language;
     }
+
+    public void articleRead(int index){
+        articles.get(index).setRead(true);
+    };
 }
 

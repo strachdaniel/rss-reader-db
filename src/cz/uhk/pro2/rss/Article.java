@@ -2,10 +2,10 @@ package cz.uhk.pro2.rss;
 
 public class Article {
     private String id;
-    private double read;
+    private boolean read;
     private String url;
     private String title;
-    private String descriptio;
+    private String description;
 
     public Article(String id, String url, String title) {
         this.id = id;
@@ -21,11 +21,11 @@ public class Article {
         this.id = id;
     }
 
-    public double getRead() {
+    public boolean getRead() {
         return read;
     }
 
-    public void setRead(double read) {
+    public void setRead(boolean read) {
         this.read = read;
     }
 
@@ -46,16 +46,16 @@ public class Article {
     }
 
     public String getDescriptio() {
-        return descriptio;
+        return description;
     }
 
-    public void setDescriptio(String descriptio) {
-        this.descriptio = descriptio;
+    public void setDescription(String descriptio) {
+        this.description = descriptio;
     }
 
     @Override
     public String toString() {
-        return title + "\n" + descriptio + "\n" + url + "\n" + id + "\n" + read;
+        return title + "\n" + description + "\n" + url + "\n" + id + "\n" + read;
     }
 
 }

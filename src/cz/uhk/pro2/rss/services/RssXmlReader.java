@@ -1,5 +1,6 @@
 package cz.uhk.pro2.rss.services;
 
+import cz.uhk.pro2.rss.Article;
 import cz.uhk.pro2.rss.Feed;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -23,13 +24,29 @@ public class RssXmlReader {
 
             SAXReader sax = new SAXReader();
             Document doc = sax.read(url);
-            Element el = doc.getRootElement().element("channel");
-            String title = el.elementText("title");
-            String description = el.elementText("description");
-            String link = el.elementText("link");
-            String language = el.elementText("language");
+            Element channel = doc.getRootElement().element("channel");
+            String title = channel.elementText("title");
+            String description = channel.elementText("description");
+            String link = channel.elementText("link");
+            String language = channel.elementText("language");
             Feed f = new Feed(title, link,description,language);
+            List<Element> items = channel.elements("item");
+
+            for (Element item : items){
+                String itemTitle = item.elementText("title");
+                String itemDescription = item.elementText("description");
+                String itemLink = item.elementText("link");
+                String itemId = item.elementText("guid");
+
+                Article article = new Article(itemId,itemLink,itemTitle);
+                article.setDescription(itemDescription);
+                f.getArticles().add(article);
+
+
+            }
             return f;
+
+
         } catch (DocumentException e) {
             throw new RuntimeException("Error reading RSS feed", e);
         }
