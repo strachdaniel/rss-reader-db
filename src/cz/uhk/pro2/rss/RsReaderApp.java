@@ -40,6 +40,7 @@ public class RsReaderApp extends JFrame {
                     System.out.println(selected.getUrl());
                     try {
                         Desktop.getDesktop().browse(new URI(selected.getUrl()));
+                        selected.setRead(true);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     } catch (URISyntaxException e1) {
