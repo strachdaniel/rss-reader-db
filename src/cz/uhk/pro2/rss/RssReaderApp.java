@@ -1,13 +1,11 @@
 package cz.uhk.pro2.rss;
 import cz.uhk.pro2.rss.services.RssXmlReader;
+import cz.uhk.pro2.rss.services.XmlUserSettingsStorage;
 import cz.uhk.pro2.rss.tableModel.TableModel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -25,6 +23,7 @@ public class RssReaderApp extends JFrame {
     JComboBox<String> combo;
     RssXmlReader r = new RssXmlReader();
     JButton btnRemoveFeed;
+    XmlUserSettingsStorage storage = new XmlUserSettingsStorage("settings.xml");
 
     public RssReaderApp() {
         feedUrl.add("https://www.novinky.cz/rss2/");
@@ -62,6 +61,14 @@ public class RssReaderApp extends JFrame {
         panel.add(btnAddFeed);
         panel.add(btnRemoveFeed);
         add(panel,BorderLayout.NORTH);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                //ulozit nastaveni
+                storage.saveFeedUrls(feedUrl);
+            }
+        });
 
         table.addKeyListener(new KeyAdapter() {
             @Override
