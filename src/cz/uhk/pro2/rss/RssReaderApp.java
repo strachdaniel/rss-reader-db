@@ -1,6 +1,7 @@
 package cz.uhk.pro2.rss;
+import cz.uhk.pro2.rss.services.DbUserSettingsStorage;
 import cz.uhk.pro2.rss.services.RssXmlReader;
-import cz.uhk.pro2.rss.services.XmlUserSettingsStorage;
+import cz.uhk.pro2.rss.services.UserSettingsStorage;
 import cz.uhk.pro2.rss.tableModel.TableModel;
 
 import javax.swing.*;
@@ -15,19 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RssReaderApp extends JFrame {
-    List<String> feedUrl = new ArrayList<>();
     private Feed f;
-    TableModel model;
-    JTable table;
-    ArrayList<Article> articles = new ArrayList<>();
-    JComboBox<String> combo;
-    RssXmlReader r = new RssXmlReader();
-    JButton btnRemoveFeed;
-    XmlUserSettingsStorage storage = new XmlUserSettingsStorage("settings.xml");
+    private TableModel model;
+    private JTable table;
+    private ArrayList<Article> articles = new ArrayList<>();
+    private JComboBox<String> combo;
+    private RssXmlReader r = new RssXmlReader();
+    private JButton btnRemoveFeed;
+    private UserSettingsStorage storage = new DbUserSettingsStorage(); //new XmlUserSettingsStorage("settings.xml");
+    private List<String> feedUrl = storage.loadFeedUrls();
 
     public RssReaderApp() {
-        feedUrl.add("https://www.novinky.cz/rss2/");
-        feedUrl.add("https://ihned.cz/?m=rss");
 
         model = new TableModel(articles);
         table = new JTable(model);
@@ -47,6 +46,8 @@ public class RssReaderApp extends JFrame {
             }
         });
 
+
+
         JToolBar panel = new JToolBar();
 
         combo = new JComboBox<>(feedUrl.toArray(new String[0]));
@@ -65,10 +66,10 @@ public class RssReaderApp extends JFrame {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                //ulozit nastaveni
-                storage.saveFeedUrls(feedUrl);
+                close();
             }
         });
+
 
         table.addKeyListener(new KeyAdapter() {
             @Override
@@ -138,6 +139,13 @@ public class RssReaderApp extends JFrame {
             e1.printStackTrace();
         } catch (URISyntaxException e1) {
             e1.printStackTrace();
+        }
+    }
+
+    public void close(){
+        int save = JOptionPane.showConfirmDialog(null,"Chcete uložit změny?");
+        if (save == 0){
+            storage.saveFeedUrls(feedUrl);
         }
     }
 
